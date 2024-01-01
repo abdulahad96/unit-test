@@ -1,69 +1,73 @@
-const mongoose = require("mongoose");
-const request = require("supertest");
-const server = require("../app");
+const request = require('supertest');
+const app = require('../app'); // Assuming your Express app instance is in the app.js file
+const Product = require('../models/product.model');
+const connectToDatabase = require('../src/db');
 
-require("dotenv").config();
 beforeAll(async () => {
-    // await mongoose.connect(process.env.MONGODB_URI);
-  });
   
-  afterAll(async () => {
-    // await mongoose.connection.close();
-    await server.close();
-  });
-  let productId;
-// /* Connecting to the database before each test. */
-// beforeEach(async () => {
-//     await mongoose.connect(process.env.MONGODB_URI);
-//   });
-  
-//   /* Closing database connection after each test. */
-//   afterEach(async () => {
-//     await mongoose.connection.close();
-//   });
+await connectToDatabase()
+});
 
-//   describe("GET /api/products/:id", () => {
-//     it("should return a product", async () => {
-//       const res = await request(app).get(
-//         "/api/products/6331abc9e9ececcc2d449e44"
-//       );
-//       expect(res.statusCode).toBe(200);
-//       expect(res.body.name).toBe("Product 1");
-//     });
-//   });
-  
-  describe("POST /api/products", () => {
-    it("should create a product", async () => {
-      const res = await request(server).post("/api/products").send({
-        name: "Product 2",
-        price: 1009,
-        description: "Description 2",
-      });
-      productId = res.body.id;
-      expect(res.statusCode).toBe(200);
-    //   expect(res.body.name).toBe();
-    });
+afterAll(async () => {
+  // Teardown tasks after running all tests
+  // For example, you may want to disconnect from the test database
+});
+
+describe('Product Routes', () => {
+  it('should create a product', async () => {
+    const response = await request(app)
+      .post('/api/product')
+      .send({ /* valid product data */ });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('_id');
+    // Additional assertions based on your expected behavior
   });
-  
-//   describe("PUT /api/products/:id", () => {
-//     it("should update a product", async () => {
-//       const res = await request(app)
-//         .patch("/api/products/6331abc9e9ececcc2d449e44")
-//         .send({
-//           name: "Product 4",
-//           price: 104,
-//           description: "Description 4",
-//         });
-//       expect(res.statusCode).toBe(200);
-//       expect(res.body.price).toBe(104);
-//     });
-//   });
-  
-//   describe("DELETE /api/products/:id", () => {
-//     it("should delete a product", async () => {
-//       const res = await request(app).delete(
-//         "/api/products/6331abc9e9ececcc2d449e44"
-//       );
-//       expect(res.statusCode).toBe(200);
-//     });
-//   });
+
+  it('should get all products', async () => {
+    const response = await request(app).get('/api/product/all');
+    expect(response.status).toBe(201);
+    // Additional assertions based on your expected behavior
+  });
+
+  // it('should get a product by ID', async () => {
+  //   // Assuming there is an existing product in the database
+  //   const existingProduct = new Product({ /* product data */ });
+  //   await existingProduct.save();
+
+  //   const response = await request(app).get('/api/product')
+  //     .query({ id: existingProduct._id });
+
+  //   expect(response.status).toBe(200);
+  //   // Additional assertions based on your expected behavior
+  // });
+
+  // it('should update a product by ID', async () => {
+  //   // Assuming there is an existing product in the database
+  //   const existingProduct = new Product({ /* product data */ });
+  //   await existingProduct.save();
+
+  //   const response = await request(app)
+  //     .patch('/api/product')
+  //     .send({
+  //       id: existingProduct._id,
+  //       // Other fields to update
+  //     });
+
+  //   expect(response.status).toBe(200);
+  //   // Additional assertions based on your expected behavior
+  // });
+
+  // it('should delete a product by ID', async () => {
+  //   // Assuming there is an existing product in the database
+  //   const existingProduct = new Product({ /* product data */ });
+  //   await existingProduct.save();
+
+  //   const response = await request(app)
+  //     .delete('/api/product')
+  //     .send({ id: existingProduct._id });
+
+  //   expect(response.status).toBe(200);
+  //   // Additional assertions based on your expected behavior
+  // });
+});
