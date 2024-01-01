@@ -4,6 +4,7 @@ const Api = require('./src/routes')
 
 var cors = require('cors');
 var app = Express();
+
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(Express.json());
@@ -24,9 +25,10 @@ app.use("/",(req,res)=>{
   res.send({health:"ok"})
 })
 
-  app.listen(3001, () => {
-    console.log("Server is up on port", 3000);
+ const server = app.listen(PORT, () => {
+    console.log("Server is up on port", PORT);
   });
 
 
-module.exports = app;
+
+module.exports = server;
