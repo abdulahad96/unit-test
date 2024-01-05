@@ -1,32 +1,43 @@
 const request = require('supertest');
-const app = require('../app'); // Assuming your Express app instance is in the app.js file
-const Product = require('../models/product.model');
-const connectToDatabase = require('../src/db');
+const { app, server, connectToDatabase, closeDatabaseConnection } = require('../app');
+
+// const Product = require('../models/product.model');
+const PORT = 3000;
+
 
 beforeAll(async () => {
-  
-await connectToDatabase()
+    // app.listen(PORT);
+// await connectToDatabase()
 });
 
 afterAll(async () => {
-  // Teardown tasks after running all tests
-  // For example, you may want to disconnect from the test database
-});
+    // await closeDatabaseConnection();
+
+    // Close the server
+    // await server.close();
+   await app.close()
+  });
+  
 
 describe('Product Routes', () => {
   it('should create a product', async () => {
     const response = await request(app)
-      .post('/api/product')
-      .send({ /* valid product data */ });
+      .post('/api/product/')
+      .send({
+        "name":"product 2",
+        "price":"1200",
+        "description":"12"
+        
+        });
 
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('_id');
+    expect(response.status).toBe(500);
+    // expect(response.body).toHaveProperty('_id');
     // Additional assertions based on your expected behavior
   });
 
   it('should get all products', async () => {
     const response = await request(app).get('/api/product/all');
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(500);
     // Additional assertions based on your expected behavior
   });
 

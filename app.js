@@ -28,24 +28,35 @@ require("dotenv").config();
 
 // };
 // connectToDatabase()
-mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(r => {
-    console.log('connected');
-  })
-  .catch(err => {
-    console.log(err);
-  });
+// mongoose
+//   .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(r => {
+//     console.log('connected');
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
+const connectToDatabase = async () => {
+  await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+  console.log('Connected to MongoDB');
+};
+
+// Close MongoDB connection
+const closeDatabaseConnection = async () => {
+  await mongoose.connection.close();
+  console.log('Closed MongoDB connection');
+};
 
 app.use("/api",Api)
 app.use("/",(req,res)=>{
   res.send({health:"ok"})
 })
-  app.listen(PORT, () => {
-    
-    console.log("Server is up on port", PORT);
-  });
+const server = app.listen(PORT, () => {
+  // connectToDatabase()
+  console.log("Server is up on port", PORT);
+});
 
 
 
-module.exports = app;
+
+module.exports = { app, server, connectToDatabase, closeDatabaseConnection };
