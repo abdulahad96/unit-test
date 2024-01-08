@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Api = require('./src/routes')
 
 var cors = require('cors');
+const {connectToDatabase} = require('./src/db');
 // const connectToDatabase = require('./src/db');
 var app = Express();
 
@@ -36,27 +37,18 @@ require("dotenv").config();
 //   .catch(err => {
 //     console.log(err);
 //   });
-const connectToDatabase = async () => {
-  await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-  console.log('Connected to MongoDB');
-};
 
-// Close MongoDB connection
-const closeDatabaseConnection = async () => {
-  await mongoose.connection.close();
-  console.log('Closed MongoDB connection');
-};
 
 app.use("/api",Api)
 app.use("/",(req,res)=>{
   res.send({health:"ok"})
 })
 const server = app.listen(PORT, () => {
-  // connectToDatabase()
+  connectToDatabase()
   console.log("Server is up on port", PORT);
 });
 
 
 
 
-module.exports = { app, server, connectToDatabase, closeDatabaseConnection };
+module.exports = { app, server };

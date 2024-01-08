@@ -6,7 +6,7 @@ Router.get("/all",productController.getAllProducts)
 Router.get("/",productController.getProductById)
 Router.post("/",productController.Createproduct)
 Router.patch("/",productController.updateProduct)
-Router.delete("/",productController.deleteProduct)
+Router.delete("/:id",productController.deleteProduct)
 
 
 

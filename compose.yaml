@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  mysql-server:
+    image: mysql:latest
+    container_name: 'mysql-server'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root_password'
+      MYSQL_DATABASE: 'sample_db'
+      MYSQL_USER: 'sample_user'
+      MYSQL_PASSWORD: 'sample_password'
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: 'phpmyadmin'
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_USER: 'sample_user'
+      PMA_PASSWORD: 'sample_password'
+      PMA_HOST: 'mysql-server'
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql-server
+
+  mysql-server-test:
+    image: mysql:latest
+    container_name: 'mysql-server-test'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root_password'
+      MYSQL_DATABASE: 'sample_db'
+      MYSQL_USER: 'sample_user'
+      MYSQL_PASSWORD: 'sample_password'
+    ports:
+      - "3305:3305"
+
+  phpmyadminTest:
+    image: phpmyadmin/phpmyadmin
+    container_name: 'phpmyadmin-test'
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_USER: 'sample_user'
+      PMA_PASSWORD: 'sample_password'
+      PMA_HOST: 'mysql-server-test'
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql-server-test
