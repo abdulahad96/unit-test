@@ -10,9 +10,9 @@ const connectToDatabase = async () => {
   try{
     await sequelize.sync({force:true})
   await sequelize.authenticate()
-  console.log("connected")
+  return true
 }catch(err){
-console.log('failed',err)
+  return false
 }
   //   const isTestEnvironment = process.env.NODE_ENV === 'test';
   //   console.log(process.env.NODE_ENV,isTestEnvironment,"aaaaaa")

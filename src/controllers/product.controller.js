@@ -7,7 +7,6 @@ const Createproduct = async (req, res, next) => {
   } catch (err) {
     return res.status(500).send(err);
   }
-return res.status(500).json({ });
 };
 const getProductById = async (req, res, next) => {
     
@@ -32,11 +31,10 @@ const getAllProducts = async (req, res, next) => {
       } catch (error) {
         return  res.status(500).json({ error: error.message });
       }
-    return res.status(500).json({  });
 };
 const updateProduct = async (req, res, next) => {
     try {
-        const product = await Product.update(req.body,{where:{id:req.params.id}});
+        const product = await Product.update(req.body,{where:{id:req.query.id}});
         return  res.status(200).json(product);
       } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -44,9 +42,8 @@ const updateProduct = async (req, res, next) => {
 };
 const deleteProduct = async (req, res, next) => {
     try {
-        console.log(req.params.id)
         await Product.destroy({where:{
-            id:req.params.id
+            id:req.query.id
         }});
         return  res.status(200).json({ message: "Product deleted successfully" });
       } catch (error) {
